@@ -43,12 +43,16 @@ def generator(samples, batch_size=64):
                     current_path = './data/IMG/' + filename
                     image = cv2.imread(current_path)
                     images.append(image)
+                    images.append(cv2.flip(image, 1))
                     if i == 1:
                         angles.append(angle + angle_correction)
+                        angles.append((angle + angle_correction) * -1.0)
                     elif i == 2:
                         angles.append(angle - angle_correction)
+                        angles.append((angle - angle_correction) * -1.0)
                     else:
                         angles.append(angle)
+                        angles.append(angle * -1.0)
             X_train = np.array(images)
             y_train = np.array(angles)
             yield sklearn.utils.shuffle(X_train, y_train, random_state=42)
