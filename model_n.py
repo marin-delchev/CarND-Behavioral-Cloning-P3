@@ -10,7 +10,7 @@ from keras.layers import Flatten, Convolution2D, MaxPooling2D, Dense, Lambda, Cr
 from keras.optimizers import Adam
 
 lines = []
-with open('./data/data/driving_log.csv') as csv_file:
+with open('./data/driving_log.csv') as csv_file:
     reader = csv.reader(csv_file)
     for line in reader:
         lines.append(line)
@@ -40,7 +40,7 @@ def generator(samples, batch_size=64):
                 for i in range(3):
                     source_path = batch_sample[i]
                     filename = source_path.split('/')[-1]
-                    current_path = './data/data/IMG/' + filename
+                    current_path = './data/IMG/' + filename
                     image = cv2.imread(current_path)
                     images.append(image)
                     images.append(cv2.flip(image, 1))
@@ -66,7 +66,8 @@ model.add(Cropping2D(cropping=((70, 25), (0, 0))))
 model.add(Convolution2D(1, 1, 1,  subsample=(1, 1), border_mode='same', init='glorot_uniform'))
 model.add(Convolution2D(16, 5, 5, subsample=(2, 2), border_mode='valid', activation='elu'))
 model.add(Convolution2D(32, 5, 5, subsample=(2, 2), border_mode='valid', activation='elu'))
-model.add(Convolution2D(64, 5, 5, subsample=(2, 2), border_mode='valid', activation='elu'))
+model.add(Convolution2D(64, 3, 3, subsample=(2, 2), border_mode='valid', activation='elu'))
+model.add(MaxPooling2D())
 model.add(Flatten())
 model.add(Dropout(0.1))
 model.add(Dense(256, activation='elu'))
@@ -74,14 +75,14 @@ model.add(Dropout(0.1))
 model.add(Dense(10, activation='elu'))
 model.add(Dense(1))
 
-adam = Adam(lr=0.0001)
+adam = Adam(lr=0.001)
 model.compile(loss='mse', optimizer=adam)
 model.summary()
 model.fit_generator(train_generator,
                     samples_per_epoch=len(train_samples)*6,
                     validation_data=validation_generator,
                     nb_val_samples=len(validation_samples)*6,
-                    nb_epoch=5,
+                    nb_epoch=3,
                     verbose=1)
 model.save('model.h5')
 
