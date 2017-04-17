@@ -126,3 +126,7 @@ Then I attempted to convert the images to other color schemes (Gray, HSV, etc.).
 
 Using many various network architectures and 90/10% split into training and test datasets I arrived at the architecture
 described above. For training I used AWS GPU instance.
+
+
+Four epochs were used for training the final model. For the selected model the evaluation and training error decrease until the forth epoch after that the evaluation error starts to grow but the training error continues to decrease. Higher number of epoch results in over-fitting the training data. I used early stopping and dropout layers in order to prevent that over-fitting.
+The batch size for the fit generator is of 64 images which allows running the network on standard laptop (not only on AWS instance).
